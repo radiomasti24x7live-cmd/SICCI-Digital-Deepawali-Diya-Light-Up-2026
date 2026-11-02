@@ -1,0 +1,21 @@
+import express from 'express';
+import http from 'node:http';
+import { Server } from 'socket.io';
+import QRCode from 'qrcode';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const dir=path.dirname(fileURLToPath(import.meta.url));
+const app=express(); const server=http.createServer(app); const io=new Server(server);
+app.use(express.static(path.join(dir,'public')));
+app.use(express.json({limit:'8kb'}));
+const file=path.join(dir,'diyas.json');
+let diyas=[];try{diyas=JSON.parse(fs.readFileSync(file,'utf8'));if(!Array.isArray(diyas))diyas=[];}catch{}
+const recent=new Map();
+app.get('/api/diyas',(req,res)=>res.json(diyas));
+app.get('/qr',async(req,res)=>{try{const base=process.env.PUBLIC_URL||`${req.protocol}://${req.get('host')}`;const png=await QRCode.toBuffer(new URL('/join',base).toString(),{width:600,margin:2});res.type('png').send(png);}catch{res.status(500).send('Set PUBLIC_URL to your public HTTPS site address');}});
+app.post('/api/light',(req,res)=>{const name=String(req.body?.name||'').trim().replace(/\s+/g,' ').slice(0,32);if(name.length<1||name.length>32)return res.status(400).json({error:'Please enter your name.'});const ip=req.ip;const now=Date.now();if(now-(recent.get(ip)||0)<5000)return res.status(429).json({error:'Please wait a few seconds.'});recent.set(ip,now);const item={id:crypto.randomUUID(),name,at:now};diyas.push(item);try{fs.writeFileSync(file,JSON.stringify(diyas));}catch{return res.status(500).json({error:'Could not save diya.'});}io.emit('diya',item);res.json(item);});
+io.on('connection',socket=>socket.emit('snapshot',diyas));
+app.get('/join',(req,res)=>res.sendFile(path.join(dir,'public','join.html')));
+app.get('/wall',(req,res)=>res.sendFile(path.join(dir,'public','wall.html')));
+const port=Number(process.env.PORT||3000);server.listen(port,()=>console.log(`Diya Wall running at http://localhost:${port}/wall`));
