@@ -1,1 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Collective Diya Wall</title><link rel="stylesheet" href="/style.css"></head><body><header class="top"><h1>🪔 Our Wall of Light 🪔</h1><div class="counter"><strong id="count">0</strong> Diyas Lit Together</div><p>Scan to light your diya</p><img class="qr" src="/qr" alt="QR code to join"></header><div class="wall" id="wall" aria-live="polite"></div><script src="/socket.io/socket.io.js"></script><script>const wall=document.querySelector('#wall'),count=document.querySelector('#count');let items=[];function add(item){if(items.some(x=>x.id===item.id))return;items.push(item);const tile=document.createElement('div');tile.className='tile';tile.innerHTML='<div class="diya"><div class="flame"></div><div class="wick"></div><div class="bowl"></div></div>';const label=document.createElement('div');label.className='name';label.textContent=item.name;tile.append(label);wall.append(tile);count.textContent=items.length;}const socket=io();socket.on('snapshot',all=>{wall.replaceChildren();items=[];all.forEach(add)});socket.on('diya',add);</script></body></html>
+🪔 Our Wall of Light 🪔
+SICCI DIGITAL DEEPAWALI
+0
+Diyas Lit Together
+Scan to
+light your diya
