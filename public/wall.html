@@ -3,85 +3,76 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SICCI Digital Deepawali — Wall of Light</title>
+<title>SICCI Digital Deepawali — Our Wall of Light</title>
 <style>
-  html,body{min-height:100%;margin:0}
-  body{overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#39155e 0%,#1a0a34 52%,#090718 100%);color:#fff4db;font-family:Georgia,serif}
-  .top{position:absolute;z-index:5;top:0;left:0;right:0;min-height:125px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 32px;background:linear-gradient(180deg,rgba(16,6,36,.96),rgba(16,6,36,.78));border-bottom:1px solid rgba(255,205,98,.35);box-sizing:border-box;text-align:left}
-  .top h1{font-size:clamp(22px,2.5vw,42px);margin:0;color:#ffdb86;text-shadow:0 0 16px #b96b41}
-  .top .subtitle{font:14px system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#f4c97e;margin:8px 0 0}
-  .counter{text-align:center;font:600 clamp(15px,1.4vw,22px) system-ui,sans-serif;color:#fff2cf}
-  .counter strong{display:block;font-size:clamp(30px,3.4vw,56px);color:#ffcd60;line-height:1.1}
-  .qrbox{display:flex;align-items:center;gap:12px;font:600 15px system-ui,sans-serif;color:#ffe9b6}
-  .qr{display:block;width:90px;height:90px;background:#fff;border:5px solid #fff;border-radius:6px;box-sizing:border-box}
-  .wall{position:absolute;inset:125px 0 0;overflow:hidden;background:none;display:block;padding:0;margin:0}
-  .wall:before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#fff8db 0.7px,transparent 1px),radial-gradient(#ffcb76 0.8px,transparent 1px);background-size:89px 91px,137px 131px;background-position:0 0,29px 47px;opacity:.23}
-  .tile{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;width:var(--tile-size,110px);height:var(--tile-height,102px);margin:0;padding:0;border:0;background:none;box-shadow:none;transform:translate(-50%,-50%);animation:floaty var(--dur,6s) ease-in-out infinite alternate;animation-delay:var(--delay,0s);pointer-events:none}
-  .tile .diya{position:relative;width:76px;height:70px;flex-shrink:0;filter:drop-shadow(0 0 10px rgba(255,157,36,.8));transform:scale(var(--scale,1));transform-origin:bottom center}
-  .tile .flame{position:absolute;left:32px;top:3px;width:15px;height:33px;border-radius:70% 15% 65% 40%;background:linear-gradient(20deg,#ff5b13 5%,#ffb52b 45%,#fff5b0 85%);transform:rotate(43deg);box-shadow:0 0 13px 5px rgba(255,163,42,.55);animation:flicker 1.7s ease-in-out infinite alternate}
-  .tile .wick{position:absolute;left:38px;top:32px;width:3px;height:13px;background:#3a170d;transform:rotate(-7deg)}
-  .tile .bowl{position:absolute;left:4px;bottom:4px;width:68px;height:29px;border-radius:8px 8px 45px 45px;background:linear-gradient(#f7bc5d,#c25b24 56%,#7c2d1d);border-top:5px solid #ffdd8e;box-sizing:border-box;box-shadow:inset 0 -4px 5px #63201b}
-  .tile .name{font:600 var(--name-size,12px) system-ui,sans-serif;color:#fff3c8;text-shadow:0 1px 5px #09021b,0 0 6px #09021b;text-align:center;max-width:100%;overflow-wrap:anywhere;line-height:1.12;max-height:2.3em;overflow:hidden;margin-top:-2px}
-  .tile.new{z-index:4;filter:drop-shadow(0 0 12px #ffcf62)}
-  @keyframes floaty{from{translate:0 -5px}to{translate:0 7px}}
-  @keyframes flicker{from{scale:.92 1;opacity:.88}to{scale:1.07 1.09;opacity:1}}
-  @media(max-width:650px){.top{padding:10px;min-height:110px;gap:8px}.top h1{font-size:18px}.top .subtitle{font-size:10px}.counter{font-size:11px}.counter strong{font-size:26px}.qrbox{font-size:10px;gap:5px}.qr{width:62px;height:62px}.wall{inset:110px 0 0}}
-  @media(prefers-reduced-motion:reduce){.tile,.tile .flame{animation:none}}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#230033}
+#stage{width:1672px;height:941px;position:absolute;left:0;top:0;transform-origin:top left;background:#360047 url('/deepawali-background.png') center/100% 100% no-repeat;overflow:hidden}
+/* Real QR is positioned precisely over the illustrative QR in the artwork. */
+#qrframe{position:absolute;left:1208px;top:352px;width:387px;height:370px;z-index:10;background:white;border-radius:18px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;padding:6px}
+#qrframe img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto}
+#lights{position:absolute;left:22px;top:305px;width:1115px;height:445px;z-index:4;pointer-events:none}
+.light{position:absolute;width:160px;height:94px;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:float 5.8s ease-in-out infinite alternate;filter:drop-shadow(0 0 8px rgba(255,155,42,.4));transition:opacity .5s ease}
+.diya{position:relative;width:85px;height:60px;flex:none;filter:drop-shadow(0 0 13px #ff9728)}
+.flame{position:absolute;left:37px;top:0;width:16px;height:35px;background:linear-gradient(25deg,#ff5d16 8%,#ffbd30 42%,#fff9c5 84%);border-radius:80% 15% 75% 35%;transform:rotate(42deg);box-shadow:0 0 18px #ffac2c;animation:flicker 1.2s ease-in-out infinite alternate}
+.wick{position:absolute;left:42px;top:33px;width:3px;height:11px;background:#5b1e0d}
+.bowl{position:absolute;left:6px;bottom:2px;width:75px;height:25px;background:linear-gradient(#ffd276 0%,#c75d22 43%,#8e271a 100%);border-radius:12px 12px 42px 42px;border-top:5px solid #ffe3a1;box-sizing:border-box;box-shadow:inset 0 -5px 6px #652018}
+.name{font:700 19px/1.1 system-ui,-apple-system,sans-serif;text-align:center;color:white;text-shadow:0 2px 5px #250025,0 0 8px #250025;max-width:160px;overflow-wrap:anywhere;max-height:2.2em;overflow:hidden}
+@keyframes float{from{translate:0 -7px}to{translate:0 9px}}
+@keyframes flicker{from{scale:.92 1;opacity:.85}to{scale:1.06 1.12;opacity:1}}
+#status{position:absolute;left:35px;bottom:15px;color:#ffe3a6;font:14px system-ui,sans-serif;opacity:.8;z-index:5}
+@media(prefers-reduced-motion:reduce){.light,.flame{animation:none}}
 </style>
 </head>
 <body>
-<header class="top">
- <div><h1>🪔 Our Wall of Light 🪔</h1><p class="subtitle">SICCI Digital Deepawali</p></div>
- <div class="counter"><strong id="count">0</strong>Diyas Lit Together</div>
- <div class="qrbox"><span>Scan to<br>light your diya</span><img class="qr" src="/qr" alt="QR code to join"></div>
-</header>
-<main class="wall" id="wall" aria-label="Live collective diya wall"></main>
+<main id="stage" aria-label="SICCI Digital Deepawali interactive wall">
+  <section id="lights" aria-live="polite" aria-label="Participants' illuminated diyas"></section>
+  <div id="qrframe"><img src="/qr" alt="Scan this QR code to light your diya"></div>
+  <div id="status" aria-live="polite"></div>
+</main>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const wall=document.querySelector('#wall');
-const count=document.querySelector('#count');
-let items=[];
-function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-function random01(seed){return (hash(String(seed))%100000)/100000}
-function layout(){
- const n=items.length;if(!n)return;
- const w=wall.clientWidth||1200,h=wall.clientHeight||600;
- const ratio=w/h;
- const cols=Math.max(1,Math.ceil(Math.sqrt(n*ratio*1.1)));
- const rows=Math.ceil(n/cols);
- const cellW=w/cols,cellH=h/rows;
- const size=Math.min(115,cellW*.93,cellH*.94);
- const scale=Math.min(1,size/105);
- const nodes=Array.from(wall.children);
- nodes.forEach((tile,i)=>{
-   const item=items[i];const col=i%cols,row=Math.floor(i/cols);
-   const jitterX=(random01(item.id+'x')-.5)*Math.min(cellW*.24,24);
-   const jitterY=(random01(item.id+'y')-.5)*Math.min(cellH*.22,20);
-   const x=(col+.5)*cellW+jitterX,y=(row+.5)*cellH+jitterY;
-   tile.style.left=`${Math.max(size/2,Math.min(w-size/2,x))}px`;
-   tile.style.top=`${Math.max(size/2,Math.min(h-size/2,y))}px`;
-   tile.style.setProperty('--tile-size',`${Math.max(30,size)}px`);
-   tile.style.setProperty('--tile-height',`${Math.max(30,size)}px`);
-   tile.style.setProperty('--scale',scale.toFixed(3));
-   tile.style.setProperty('--name-size',`${Math.max(7,Math.min(13,size*.12))}px`);
-   tile.style.setProperty('--dur',`${5+random01(item.id+'d')*3}s`);
-   tile.style.setProperty('--delay',`${-random01(item.id+'t')*5}s`);
- });
+'use strict';
+const stage=document.getElementById('stage');
+const lights=document.getElementById('lights');
+const status=document.getElementById('status');
+const all=[];
+const PAGE_SIZE=24;
+let page=0,focusUntil=0;
+function resize(){const s=Math.min(innerWidth/1672,innerHeight/941);stage.style.transform=`scale(${s})`;stage.style.left=`${(innerWidth-1672*s)/2}px`;stage.style.top=`${(innerHeight-941*s)/2}px`}
+addEventListener('resize',resize);resize();
+function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function draw(){
+  lights.replaceChildren();
+  if(!all.length){status.textContent='';return}
+  const pages=Math.ceil(all.length/PAGE_SIZE);page%=pages;
+  const current=all.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
+  // A staggered constellation rather than a straight row. Stable positions per page.
+  const cols=6,rows=4,cellW=1115/cols,cellH=445/rows;
+  current.forEach((item,i)=>{
+    const col=i%cols,row=Math.floor(i/cols),seed=hash(item.id);
+    const jitterX=((seed%100)/100-.5)*32;
+    const jitterY=(((seed>>>9)%100)/100-.5)*24;
+    const tile=document.createElement('div');tile.className='light';
+    tile.style.left=`${(col+.5)*cellW+jitterX}px`;
+    tile.style.top=`${(row+.5)*cellH+jitterY}px`;
+    tile.style.animationDelay=`-${(seed%500)/100}s`;
+    const diya=document.createElement('div');diya.className='diya';
+    for(const partName of ['flame','wick','bowl']){const part=document.createElement('div');part.className=partName;diya.append(part)}
+    const label=document.createElement('div');label.className='name';label.textContent=String(item.name||'Guest');
+    tile.append(diya,label);lights.append(tile);
+  });
+  // No participation count: only an unobtrusive page indicator when necessary.
+  status.textContent=pages>1?`Wall of Light · View ${page+1} of ${pages}`:'';
 }
-function add(item){
- if(!item||!item.id||items.some(x=>x.id===item.id))return;
- items.push(item);
- const tile=document.createElement('div');tile.className='tile new';
- const diya=document.createElement('div');diya.className='diya';
- for(const cls of ['flame','wick','bowl']){const part=document.createElement('div');part.className=cls;diya.append(part)}
- const label=document.createElement('div');label.className='name';label.textContent=String(item.name||'Guest');
- tile.append(diya,label);wall.append(tile);
- count.textContent=items.length;
- layout();setTimeout(()=>tile.classList.remove('new'),3000);
-}
-const socket=io();
-socket.on('snapshot',all=>{wall.replaceChildren();items=[];if(Array.isArray(all))all.forEach(add)});
-socket.on('diya',add);
-window.addEventListener('resize',layout);
+function add(item){if(!item||!item.id||all.some(x=>x.id===item.id))return;all.push(item);page=Math.floor((all.length-1)/PAGE_SIZE);focusUntil=Date.now()+9000;draw()}
+if(typeof io==='function'){
+  const socket=io();
+  socket.on('snapshot',data=>{all.length=0;if(Array.isArray(data))for(const item of data)if(item&&item.id&&!all.some(x=>x.id===item.id))all.push(item);page=Math.max(0,Math.ceil(all.length/PAGE_SIZE)-1);draw()});
+  socket.on('diya',add);
+  socket.on('connect',()=>{status.style.opacity='.8'});
+  socket.on('disconnect',()=>{status.textContent='Reconnecting to live wall…'});
+}else{status.textContent='Live connection unavailable';}
+setInterval(()=>{if(Date.now()<focusUntil||all.length<=PAGE_SIZE)return;page=(page+1)%Math.ceil(all.length/PAGE_SIZE);draw()},12000);
 </script>
-</body></html>
+</body>
+</html>
